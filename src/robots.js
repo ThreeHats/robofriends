@@ -70,6 +70,12 @@ export const robots = [
       name: 'Katharina Smith',
       username: 'Katharina',
       email: 'Katharina_Smith@katharina.biz'
+    },
+    {
+      id: 13,
+      name: 'Katharina Smith',
+      username: 'Katharina',
+      email: 'Katharina_Smith@katharina.biz'
     }
   ];
   
