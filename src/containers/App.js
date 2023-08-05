@@ -15,7 +15,6 @@ const App = () => {
         fetch("https://jsonplaceholder.typicode.com/users")
         .then(response => response.json())
         .then(user => setRobots(user))
-        console.log(robots);
     }, [])
 
     useEffect(() => {
