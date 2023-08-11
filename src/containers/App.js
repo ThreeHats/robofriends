@@ -1,40 +1,47 @@
-import React, {useState, useEffect} from "react";
+import React, { useEffect } from "react";
+import { connect } from "react-redux";
+import { setSearchfield, requestRobots } from "../actions";
+
 import CardList from "../components/CardList";
 import SearchBox from   "../components/SearchBox";
-import './App.css';
 import Scroll from "../components/Scroll";
 import ErrorBoundery from "../components/ErrorBoundery";
 
-const App = () => {
-    const [robots, setRobots] = useState([]);
-    const [searchfield, setSearchfield] = useState('');
-    const [count, setCount] = useState(0);
+import './App.css';
 
-    
-    useEffect(() => {
-        fetch("https://jsonplaceholder.typicode.com/users")
-        .then(response => response.json())
-        .then(user => setRobots(user))
-    }, [])
-
-    useEffect(() => {
-    console.log(count);
-    }, [count])
-        
-    const onSearchChange = (event) => {
-        setSearchfield(event.target.value);
+const mapStateToProps = (state) => {
+    return {
+        searchField: state.searchRobots.searchField,
+        robots: state.requestRobots.robots,
+        isPending: state.requestRobots.isPending,
+        // error: state.requestRobots.error
     }
+}
+
+const mapDispachToProps = (dispatch) => {
+    return {
+        onSearchChange: (event) => dispatch(setSearchfield(event.target.value)),
+        onRequestRobots: () => dispatch(requestRobots())
+    }
+}
+
+const App = (props) => {
+    useEffect(() => {
+        props.onRequestRobots();
+    }, [])
+        
+    const { searchField, onSearchChange, robots, isPending } = props;
 
     const filteredRobots = robots.filter(robot => {
-                return robot.name.toLowerCase().includes(searchfield.toLowerCase());
+                return robot.name.toLowerCase().includes(searchField.toLowerCase());
     })
+
         
-    return !robots.length ?
+    return isPending ?
         <h1>loading</h1> :
         (
         <div className="tc">
             <h1 className="f1">RoboFriends</h1>
-            <button onClick={()=>setCount(count+1)}>Click ME</button>
             <SearchBox searchChange={onSearchChange} />
             <Scroll>
                 <ErrorBoundery>
@@ -45,4 +52,4 @@ const App = () => {
     );
 }
 
-export default App;
+export default connect(mapStateToProps, mapDispachToProps)(App);
